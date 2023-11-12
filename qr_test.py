@@ -1,14 +1,13 @@
-import compile
 import re
-import os
 import config
 import qrcode
-import time
+import info
 from io import BytesIO
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from info import information  # 추가된 부분
 
 #set the bot token for your Slack bot 
 bot_token = config.bot_token
@@ -80,6 +79,13 @@ def aks_qrcode(event, client, say):
     finally:
         processing_flag = False
 
+# 도움말 출력 함수
+@app.message(re.compile("!도움말"))
+def show_help(event, client, say):
+    help_message = "도움말:\n"
+    for key, value in information["유의사항"].items():
+        help_message += f"{key}. {value}\n"
+    say(help_message)
     
 #start the Socket Mode handler
 if __name__ == "__main__":
